@@ -13,6 +13,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
   },
+  {
+    path: "/taskone",
+    element: <TaskOnePage />,
+  },
 
   {
     path: "/taskthree",
@@ -21,10 +25,6 @@ const router = createBrowserRouter([
   {
     path: "/tasktwo",
     element: <TaskTwoPage />,
-  },
-  {
-    path: "/taskone",
-    element: <TaskOnePage />,
   },
 ]);
 

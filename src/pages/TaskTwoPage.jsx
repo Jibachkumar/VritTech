@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function TaskTwoPage() {
   const [cells, setCells] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const totalCells = 646;
@@ -48,6 +50,14 @@ function TaskTwoPage() {
 
   return (
     <div className="grid-background">
+      <div className="absolute z-10 mt-2 mx-2">
+        <button
+          className="bg-blue-700 px-5 rounded-xl font-semibold text-lg text-white font-serif"
+          onClick={() => navigate("/")}
+        >
+          Go Back
+        </button>
+      </div>
       {cells.map((_, index) => (
         <div key={index} className="grid-cell w-[40px] h-[41px] bg-[#f0f0f0]" />
       ))}
