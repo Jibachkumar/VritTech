@@ -1,0 +1,204 @@
+/* top row animation */
+.diagonal-shape {
+  clip-path: polygon(10% 0%, 100% 0%, 100% 100%, 10% 100%, 0% 50%);
+  background-color: #d7d7d7;
+}
+
+@keyframes fadeInOut {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.diagonal-left {
+  animation: fadeInOut 5s infinite;
+}
+
+@keyframes bounce-top-down {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px) rotate(-10deg);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes star-up-down {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-5px) rotate(10deg);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(5px) rotate(-10deg);
+  }
+}
+
+.bounce-thumb {
+  animation: bounce-top-down 1.5s ease-in-out infinite;
+}
+
+.bounce-star {
+  animation: star-up-down 1.5s ease-in-out infinite;
+}
+
+/* bottom row animation */
+@keyframes wiggle-rotate {
+  0% {
+    transform: rotate(8deg);
+  }
+  20% {
+    transform: rotate(-6deg) translateY(-10px) translateX(-3px);
+  }
+  40% {
+    transform: rotate(deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes wiggle-smile {
+  0% {
+    transform: rotate(2deg);
+  }
+  20% {
+    transform: rotate(-3deg);
+  }
+  40% {
+    transform: rotate(deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.wiggle-smile {
+  animation: wiggle-smile 1.5s ease-in-out infinite;
+}
+.wiggle-rotate {
+  animation: wiggle-rotate 1.5s ease-in-out infinite;
+}
+
+@keyframes swing-left-to-right {
+  0% {
+    transform: rotate(-8deg); /* Start from left */
+  }
+  20% {
+    transform: rotate(12deg); /* Swing to right */
+  }
+  40% {
+    transform: rotate(0deg); /* Return to left */
+  }
+  100% {
+    transform: rotate(0deg); /* Hold at left */
+  }
+}
+
+.swing-left-right {
+  animation: swing-left-to-right 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce-up-down {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateX(5px) rotate(-10deg);
+  }
+}
+
+.bounce-smile {
+  animation: bounce-up-down 1.5s ease-in-out infinite;
+}
+
+@keyframes rotateHeart {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(25deg) rotateY(-20deg);
+  }
+}
+
+.heart-spin {
+  animation: rotateHeart 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce-message-up-down {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+
+.bounce-message {
+  animation: bounce-message-up-down 1.5s ease-in-out infinite;
+}
+
+/* onMouseEnter transition */
+.img-wrapper {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+@keyframes floatY {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.float-loop {
+  animation: floatY 3s ease-in-out infinite;
+}
+.float-paused {
+  animation-play-state: paused !important;
+}
+
+/* TaskTwoPage css */
+.grid-background {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 40px);
+  grid-template-rows: repeat(auto-fill, 41px);
+  gap: 2px;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+}
+
+.grid-active {
+  background-color: #7b5dfd;
+}

@@ -1,105 +1,325 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
+import messageicon from "../assets/message.png";
+import editmessage from "../assets/text-bubble.png";
+import trophy from "../assets/trophy.png";
 
 function TaskOnePage() {
-  return <div>TaskOnePage</div>;
-}
+  const topRef = useRef();
+  const centerRef = useRef();
+  const bottomRef = useRef();
+  const number = [1, 2, 3];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showCard, setShowCard] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const timeoutRef = useRef(null);
 
-export default TaskOnePage;
+  // number transaction effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % number.length);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-<div class="max-w-7xl mx-auto">
-    <p class="text-gray-800 text-lg mb-2">Explore our classes and master trending skills!</p>
-    <h1 class="font-extrabold text-2xl md:text-3xl text-gray-900 mb-8">
-      Dive Into
-      <span class="text-[#1B9B88]"> What’s Hot Right Now! </span>
-      <span>🔥</span>
-    </h1>
+  const animate = () => {
+    // Top row
+    topRef.current
+      .querySelectorAll(".img-wrapper")
+      .forEach((wrapper, index) => {
+        const icons = wrapper.querySelector("i");
+        const fadeInOut = wrapper.querySelector(".fadeOut");
+        if (wrapper.dataset.type === "icon") {
+          icons.style.transition = "transform 0.3s ease";
+          wrapper.style.transform = "translateY(-40px)";
+        } else {
+          wrapper.style.transition = "transform 0.3s ease";
+          const direction = index % 2 === 0 ? -80 : 80;
+          wrapper.style.transform = `translate(${direction}px, -80px)`;
 
-    <div class="flex flex-col md:flex-row gap-6 md:gap-8">
-      <!-- Left big card -->
-      <div
-        class="bg-[#C43346] rounded-3xl flex flex-col justify-between p-8 md:p-12 flex-1 min-w-[280px] md:min-w-[400px] relative"
-      >
-        <a
-          href="#"
-          class="text-white font-semibold text-sm md:text-base absolute top-6 right-8 flex items-center gap-1 hover:underline"
-          >View all Courses <i class="fas fa-arrow-right"></i
-        ></a>
+          const img = wrapper.querySelector("img");
+          addFloatLoop(img);
+        }
+      });
 
-        <div class="flex justify-center gap-8 mt-12 mb-8">
+    // center row
+    centerRef.current
+      .querySelectorAll(".img-wrapper")
+      .forEach((wrapper, index) => {
+        wrapper.style.transition = "transform 0.3s ease";
+
+        const direction = index % 2 === 0 ? -100 : 100;
+        wrapper.style.transform = `translateX(${direction}px)`;
+
+        const img = wrapper.querySelector("img");
+        addFloatLoop(img);
+      });
+
+    // bottom row
+    bottomRef.current.querySelectorAll(".img-wrapper").forEach((wrapper) => {
+      wrapper.style.transition = "transform 0.3s ease";
+      const img = wrapper.querySelector("img");
+
+      const alt = img.alt.trim();
+      img.style.transition = "transform 0.3s ease";
+
+      switch (alt) {
+        case "center image one":
+          wrapper.style.transform = "translate(-80px, 80px)";
+          addFloatLoop(img);
+          break;
+        case "center image two":
+          wrapper.style.transform = "translate(80px, 80px)";
+          addFloatLoop(img);
+          break;
+        case "trophy image":
+          wrapper.style.transform = "translateY(110px)";
+          break;
+        case "message icon image":
+          wrapper.style.transform = "translateX(-50px)";
+          break;
+        case "message box image":
+          wrapper.style.transform = "translateX(50px)";
+          break;
+        default:
+          img.style.transform = "translate(0, 0)";
+      }
+    });
+  };
+
+  const reset = () => {
+    [topRef, centerRef, bottomRef].forEach((ref) => {
+      ref.current.querySelectorAll(".img-wrapper").forEach((wrapper) => {
+        wrapper.style.transition = "transform 0.3s ease";
+        wrapper.style.transform = "translate(0, 0)";
+
+        const img = wrapper.querySelector("img");
+        if (!img) return;
+
+        img.style.transition = "transform 0.3s ease";
+        img.style.transform = "translate(0, 0)";
+
+        img.classList.remove("float-loop");
+        img.classList.remove("float-paused");
+      });
+    });
+  };
+
+  // Image infinite float
+  const addFloatLoop = (img, delay = 300) => {
+    if (img) {
+      setTimeout(() => {
+        img.classList.add("float-loop");
+      }, delay);
+    }
+  };
+
+  // paused image float
+  useEffect(() => {
+    const allFloatingImages = document.querySelectorAll(".float-loop");
+    allFloatingImages.forEach((img) => {
+      if (isPaused) {
+        img.classList.add("float-paused");
+      } else {
+        img.classList.remove("float-paused");
+      }
+    });
+  }, [isPaused]);
+
+  // card hover visibililty
+  const hoverCardImage = () => {
+    setShowCard(true);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current); // cancel any previous timer
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setShowCard(false);
+    }, 2000);
+  };
+
+  return (
+    <div
+      className="max-w-5xl mx-auto mt-52 p-5 cursor-pointer"
+      onMouseEnter={animate}
+      onMouseLeave={reset}
+    >
+      {/* top row */}
+      <div className="flex justify-center items-center gap-34" ref={topRef}>
+        <div className="img-wrapper relative z-[1]">
           <img
-            src="https://placehold.co/64x64/react-logo-blue-white.png"
-            alt="React logo icon on blue square background"
-            class="w-16 h-16 object-contain"
+            src="https://images.pexels.com/photos/5255233/pexels-photo-5255233.jpeg"
+            alt="man face"
+            className="w-25 h-25 rounded-4xl object-cover"
+            onMouseEnter={hoverCardImage}
+            onClick={() => setIsPaused((prev) => !prev)}
           />
+
+          <div className="absolute z-10 flex ml-[84px] -mt-16 text-xs shadow-lg rounded-lg px-3 py-4 diagonal-left fadeOut diagonal-shape">
+            <span>Amazing</span>
+            <div className="flex justify-center items-center">
+              <i class="fa-solid fa-star text-yellow-500"></i>
+              <i class="fa-solid fa-star text-yellow-500"></i>
+              <i class="fa-solid fa-star text-yellow-500"></i>
+              <i class="fa-solid fa-star text-yellow-500"></i>
+              <i class="fa-solid fa-star text-yellow-500"></i>
+            </div>
+          </div>
+
+          <div
+            className={`
+              absolute z-[999]  min-w-sm text-xs origin-top bg-white rounded-lg shadow-md p-4 -ml-[150px]
+              transform transition-all duration-1000 ease-out
+              ${showCard ? "scale-100 opacity-100" : "scale-0 opacity-0"}
+            `}
+          >
+            It is a long established fact that a reader will be distracted by
+            the readable content of a page when looking at its layout. The point
+            of using Lorem Ipsum is that it has a more-or-less normal
+            distribution of letters, as opposed to using 'Content here, content
+            here', making it look like readable English
+            <div className="flex justify-end items-end flex-col">
+              <h2>Jibachh Kumar</h2>
+              <p>Software Engineer</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="img-wrapper">
           <img
-            src="https://placehold.co/48x48/social-media-icons-hashtag-heart-like.png"
-            alt="Social media icons with hashtag, heart, and like symbols"
-            class="w-12 h-12 object-contain"
-          />
-          <img
-            src="https://placehold.co/64x64/vuejs-logo-green.png"
-            alt="VueJS logo icon with green color"
-            class="w-16 h-16 object-contain"
-          />
-          <img
-            src="https://placehold.co/64x64/colorful-pen-nib-icon.png"
-            alt="Colorful pen nib icon representing design or creativity"
-            class="w-16 h-16 object-contain"
+            src="https://images.pexels.com/photos/2383227/pexels-photo-2383227.jpeg"
+            alt="women face"
+            className="w-25 h-25 rounded-4xl object-cover"
+            onClick={() => setIsPaused((prev) => !prev)}
           />
         </div>
 
-        <div class="flex items-center gap-4">
-          <span class="text-[96px] font-extrabold text-[#F7E9E9] leading-none select-none">23</span>
-          <span
-            class="text-[#F7E9E9] font-extrabold text-5xl -ml-3 select-none"
-            >+</span
-          >
-          <div>
-            <h2 class="text-white font-bold text-xl md:text-2xl mb-1 select-none">All Courses</h2>
-            <p class="text-[#F7E9E9] text-sm md:text-base max-w-xs leading-relaxed">
-              courses you're powering through right now.
-            </p>
+        <div className="absolute z-0 img-wrapper" data-type="icon">
+          <i className="fa-solid fa-thumbs-up text-4xl text-amber-800 bounce-thumb"></i>
+        </div>
+        <div className="absolute -mt-14 -ml-6 img-wrapper" data-type="icon">
+          <i className="fa-solid fa-star text-2xl text-amber-400 bounce-star"></i>
+        </div>
+      </div>
+
+      {/* center row */}
+      <div
+        className="flex justify-center items-center gap-[420px] mt-3"
+        ref={centerRef}
+      >
+        <div className="img-wrapper relative z-0">
+          <img
+            src="https://images.pexels.com/photos/10204120/pexels-photo-10204120.jpeg"
+            alt="center image one"
+            className="w-25 h-25 object-cover rounded-4xl"
+            onClick={() => setIsPaused((prev) => !prev)}
+          />
+        </div>
+        <div className="img-wrapper relative z-0">
+          <img
+            src="https://images.pexels.com/photos/2128819/pexels-photo-2128819.jpeg"
+            alt="center image two"
+            className="w-25 h-25 object-cover rounded-4xl"
+            onClick={() => setIsPaused((prev) => !prev)}
+          />
+        </div>
+
+        <div className="absolute z-0 flex flex-col gap-y-4 mt-7">
+          <p className="text-2xl text-slate-800">
+            {" "}
+            Hear How Level Up Their Game
+          </p>
+          <h2 className="text-center font-bold text-4xl ">
+            Skill <span className="text-green-700">Masters</span> Unite!
+            <span>🤝</span>
+          </h2>
+          <p className="text-center text-lg font-semibold">
+            View all Testimonials{" "}
+            <span>
+              <i class="fa-solid fa-arrow-right-long"></i>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      {/* bottom row */}
+      <div
+        className="flex justify-center items-center mt-10 gap-34 relative"
+        ref={bottomRef}
+      >
+        <div className="img-wrapper">
+          <img
+            src="https://images.pexels.com/photos/28453974/pexels-photo-28453974.jpeg"
+            alt="center image one"
+            className="w-25 h-25 object-cover rounded-4xl"
+            onClick={() => setIsPaused((prev) => !prev)}
+          />
+        </div>
+
+        <div className="img-wrapper">
+          <img
+            src="https://images.pexels.com/photos/14267039/pexels-photo-14267039.jpeg"
+            alt="center image two"
+            className="w-25 h-25 object-cover rounded-4xl"
+            onClick={() => setIsPaused((prev) => !prev)}
+          />
+          <div className="absolute flex ml-[90px] -mt-16 text-xs shadow-2xl rounded-lg px-3 py-4 diagonal-left diagonal-shape z-50 fadeOut">
+            <div className="flex">
+              <i class="fa-solid fa-star text-yellow-500"></i>
+              <i class="fa-solid fa-star text-yellow-500"></i>
+              <i class="fa-solid fa-star text-yellow-500"></i>
+              <i class="fa-solid fa-star text-yellow-500"></i>
+              <i class="fa-solid fa-star text-yellow-500"></i>
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute img-wrapper">
+          <img
+            src={trophy}
+            alt="trophy image"
+            className="w-20 h-20 object-cover swing-left-right"
+            onClick={() => setIsPaused((prev) => !prev)}
+          />
+        </div>
+
+        <div className="absolute img-wrapper -ml-[470px] -mt-14">
+          <i className="fa-solid fa-face-smile text-5xl text-amber-400 bounce-smile"></i>
+          <i className="fa-solid fa-heart text-red-700 text-2xl heart-spin"></i>
+          <img
+            src={messageicon}
+            alt="message icon image"
+            className="w-10 h-8 object-cover absolute -mt-20 ml-8 bounce-message"
+            onClick={() => setIsPaused((prev) => !prev)}
+          />
+        </div>
+
+        <div className="absolute z-0 ml-[470px] -mt-12 img-wrapper">
+          <img
+            src={editmessage}
+            alt="message box image"
+            className="w-17 h-17 object-cover wiggle-rotate"
+            onClick={() => setIsPaused((prev) => !prev)}
+          />
+
+          <i className="fa-regular fa-heart text-3xl -mt-[56px] ml-2 absolute wiggle-smile"></i>
+
+          <div className="absolute overflow-hidden h-[35px] -mt-[56px] ml-12">
+            <div
+              className="flex flex-col transition-transform duration-300 ease-in-out"
+              style={{ transform: `translateY(-${activeIndex * 35}px)` }}
+            >
+              {number.map((digit, index) => (
+                <span key={index} className="text-2xl font-semibold">
+                  {digit}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      <!-- Middle card -->
-      <div
-        class="bg-[#F9E9EA] rounded-3xl flex flex-col justify-center items-center p-6 md:p-8 min-w-[160px] md:min-w-[200px] relative"
-      >
-        <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-black text-xs font-normal select-none">
-          Click me!
-          <svg
-            class="inline-block w-6 h-6 -rotate-45"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M17 13l-5 5m0 0l-5-5m5 5V6"
-            ></path>
-          </svg>
-        </div>
-        <div class="flex flex-col items-center justify-center gap-2 rotate-[270deg] origin-center">
-          <h3 class="text-[#C43346] font-extrabold text-lg md:text-xl leading-tight select-none">
-            Upcoming <br />Courses
-          </h3>
-          <p
-            class="text-[#C43346] text-xs md:text-sm font-normal max-w-[120px] text-center leading-tight"
-          >
-            exciting new courses <br />
-            waiting to boost your skills.
-          </p>
-        </div>
-        <div class="flex items-center gap-1 mt-6 select-none">
-          <span class="text-[#C43346] font-extrabold text-[96px] leading-none">05</span>
-          <span class="text-[#C43346] font-extrabold text-5xl -ml-3">+</span>
-        </div>
-      </div>
-
-      <!-- Right card -->
-      <div
+export default TaskOnePage;

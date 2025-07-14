@@ -20,11 +20,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/tasktwo",
-    element: <TaskThreePage />,
+    element: <TaskTwoPage />,
   },
   {
     path: "/taskone",
-    element: <TaskThreePage />,
+    element: <TaskOnePage />,
   },
 ]);
 
